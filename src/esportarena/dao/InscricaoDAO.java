@@ -1,13 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package esportarena.dao;
 
-/**
- *
- * @author Micro
- */
+import esportarena.model.Inscricao;
+import java.util.List;
+
 public interface InscricaoDAO {
-    
+  
+    void salvar(Inscricao inscricao);
+
+    void deletar(int id);
+
+    List<Inscricao> listarPorTorneio(int idTorneio);
+
+    List<Inscricao> listarPorJogador(int idJogador);
 }

@@ -1,13 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package esportarena.dao;
 
-/**
- *
- * @author Micro
- */
+import esportarena.model.Partida;
+import java.util.List;
+
 public interface PartidaDAO {
     
+ Partida buscarPorId(int id);
+
+    void salvar(Partida partida);
+
+    void atualizar(Partida partida);
+
+    void deletar(int id);
+
+    List<Partida> listarPorTorneio(int idTorneio);
 }

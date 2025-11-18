@@ -1,13 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package esportarena.dao;
 
-/**
- *
- * @author Micro
- */
+import esportarena.model.Time;
+import java.util.List;
+
 public interface TimeDAO {
-    
+   
+    Time buscarPorId(int id);
+
+    void salvar(Time time);
+
+    void atualizar(Time time);
+
+    void deletar(int id);
+
+    List<Time> listarPorTorneio(int idTorneio);
 }

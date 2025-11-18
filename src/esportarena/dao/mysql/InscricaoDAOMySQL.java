@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InscriçãoDAOMySQL implements InscricaoDAO {
+public class InscricaoDAOMySQL implements InscricaoDAO {
     @Override
     public void salvar(Inscricao i) {
         String sql = "INSERT INTO Inscricao (id_torneio, id_time, id_jogador, data_inscricao) VALUES (?, ?, ?, ?)";
