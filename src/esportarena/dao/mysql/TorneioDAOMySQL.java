@@ -5,11 +5,12 @@ import esportarena.model.Torneio;
 import esportarena.database.ConexaoMySQL;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TorneioDAOMySQL implements TorneioDAO{
-    
+public class TorneioDAOMySQL implements TorneioDAO {
+
     @Override
     public Torneio buscarPorId(int id) {
         String sql = "SELECT * FROM Torneio WHERE id_torneio = ?";
@@ -67,8 +68,8 @@ public class TorneioDAOMySQL implements TorneioDAO{
             stmt.setString(1, torneio.getNome());
             stmt.setString(2, torneio.getDescricao());
             stmt.setString(3, torneio.getJogo());
-            stmt.setDate(4, torneio.getDataInicio());
-            stmt.setDate(5, torneio.getDataTermino());
+            stmt.setDate(4, Date.valueOf(torneio.getDataInicio()));
+            stmt.setDate(5, Date.valueOf(torneio.getDataTermino()));
             stmt.setString(6, torneio.getModalidade());
             stmt.setInt(7, torneio.getParticipantesMin());
             stmt.setInt(8, torneio.getParticipantesMax());
@@ -99,14 +100,14 @@ public class TorneioDAOMySQL implements TorneioDAO{
             stmt.setString(1, torneio.getNome());
             stmt.setString(2, torneio.getDescricao());
             stmt.setString(3, torneio.getJogo());
-            stmt.setDate(4, torneio.getDataInicio());
-            stmt.setDate(5, torneio.getDataTermino());
+            stmt.setDate(4, Date.valueOf(torneio.getDataInicio()));
+            stmt.setDate(5, Date.valueOf(torneio.getDataTermino()));
             stmt.setString(6, torneio.getModalidade());
             stmt.setInt(7, torneio.getParticipantesMin());
             stmt.setInt(8, torneio.getParticipantesMax());
             stmt.setString(9, torneio.getPlataforma());
             stmt.setString(10, torneio.getRegras());
-            stmt.setInt(11, torneio.getId());
+            stmt.setInt(11, torneio.getIdTorneio());
 
             stmt.executeUpdate();
 
@@ -131,19 +132,26 @@ public class TorneioDAOMySQL implements TorneioDAO{
     }
 
     private Torneio criarTorneio(ResultSet rs) throws SQLException {
-        return new Torneio(
-                rs.getInt("id_torneio"),
-                rs.getString("nome"),
-                rs.getString("descricao"),
-                rs.getString("jogo"),
-                rs.getDate("data_inicio"),
-                rs.getDate("data_termino"),
-                rs.getString("modalidade"),
-                rs.getInt("participantes_min"),
-                rs.getInt("participantes_max"),
-                rs.getString("plataforma"),
-                rs.getString("regras"),
-                rs.getInt("id_organizador")
-        );
+        Torneio t = new Torneio();
+
+        t.setIdTorneio(rs.getInt("id_torneio"));
+        t.setNome(rs.getString("nome"));
+        t.setDescricao(rs.getString("descricao"));
+        t.setJogo(rs.getString("jogo"));
+
+        Date di = rs.getDate("data_inicio");
+        if (di != null) t.setDataInicio(di.toLocalDate());
+
+        Date dt = rs.getDate("data_termino");
+        if (dt != null) t.setDataTermino(dt.toLocalDate());
+
+        t.setModalidade(rs.getString("modalidade"));
+        t.setParticipantesMin(rs.getInt("participantes_min"));
+        t.setParticipantesMax(rs.getInt("participantes_max"));
+        t.setPlataforma(rs.getString("plataforma"));
+        t.setRegras(rs.getString("regras"));
+        t.setIdOrganizador(rs.getInt("id_organizador"));
+
+        return t;
     }
 }
