@@ -59,7 +59,7 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
         String sql = "INSERT INTO Usuario (nome_usuario, email, senha, tipo) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConexaoMySQL.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getEmail());
@@ -67,6 +67,12 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
             stmt.setString(4, usuario.getTipo());
 
             stmt.executeUpdate();
+
+            // Recuperar ID gerado automaticamente
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) {
+                usuario.setId(keys.getInt(1));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,12 +136,14 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
     }
 
     private Usuario criarUsuario(ResultSet rs) throws SQLException {
-        return new Usuario(
-                rs.getInt("id"),
-                rs.getString("nome_usuario"),
-                rs.getString("email"),
-                rs.getString("senha"),
-                rs.getString("tipo")
-        );
-    }  
+        Usuario u = new Usuario();
+
+        u.setId(rs.getInt("id"));
+        u.setNome(rs.getString("nome_usuario"));
+        u.setEmail(rs.getString("email"));
+        u.setSenha(rs.getString("senha"));
+        u.setTipo(rs.getString("tipo"));
+
+        return u;
+    }
 }
