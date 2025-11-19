@@ -32,26 +32,25 @@ public class TimeDAOMySQL implements TimeDAO {
     }
 
     @Override
-    public List<Time> listarTodos(int idTorneio) {
-        List<Time> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Time WHERE id_torneio = ? ORDER BY nome_time";
+    public List<Time> listarTodos() {
+    List<Time> lista = new ArrayList<>();
+    String sql = "SELECT * FROM Time ORDER BY nome_time";
 
-        try (Connection conn = ConexaoMySQL.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = ConexaoMySQL.conectar();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
 
-            stmt.setInt(1, idTorneio);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                lista.add(criarTime(rs));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            lista.add(criarTime(rs));
         }
 
-        return lista;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return lista;
+}
+
 
     @Override
     public void salvar(Time time) {

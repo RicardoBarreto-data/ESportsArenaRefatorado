@@ -168,6 +168,28 @@ public class JogadorDAOMySQL implements JogadorDAO {
         return lista;
     }
 
+  @Override
+
+  public List<Jogador> listarTodos() {
+    List<Jogador> lista = new ArrayList<>();
+
+    String sql = "SELECT * FROM Jogador";
+
+    try (Connection conn = ConexaoMySQL.conectar();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            lista.add(criarJogador(rs));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return lista;
+}
+
 
     private Jogador criarJogador(ResultSet rs) throws SQLException {
         Jogador j = new Jogador();

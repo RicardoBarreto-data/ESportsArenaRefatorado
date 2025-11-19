@@ -5,11 +5,13 @@ import java.util.List;
 
 public interface InscricaoDAO {
 
-    Inscricao buscarPorId(int id);
+    void salvar(Inscricao i);
 
-    void salvar(Inscricao inscricao);
+    void atualizar(Inscricao i);
 
     void deletar(int id);
+
+    Inscricao buscarPorId(int id);
 
     List<Inscricao> listarPorTorneio(int idTorneio);
 

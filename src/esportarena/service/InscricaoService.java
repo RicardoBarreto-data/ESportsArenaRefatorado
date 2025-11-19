@@ -16,7 +16,11 @@ public class InscricaoService {
 
     public void salvar(Inscricao i) { inscricaoDAO.salvar(i); }
 
+    public void atualizar(Inscricao i) { inscricaoDAO.atualizar(i); }
+
     public void deletar(int id) { inscricaoDAO.deletar(id); }
+
+    public Inscricao buscarPorId(int id) { return inscricaoDAO.buscarPorId(id); }
 
     public List<Inscricao> listarPorTorneio(int idTorneio) {
         return inscricaoDAO.listarPorTorneio(idTorneio);
@@ -26,3 +30,4 @@ public class InscricaoService {
         return inscricaoDAO.listarPorJogador(idJogador);
     }
 }
+

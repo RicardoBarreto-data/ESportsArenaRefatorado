@@ -15,22 +15,69 @@ public class InscricaoDAOMySQL implements InscricaoDAO {
         String sql = "INSERT INTO Inscricao (id_torneio, id_jogador, data_inscricao) VALUES (?, ?, ?)";
 
         try (Connection conn = ConexaoMySQL.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, i.getIdTorneio());
+            stmt.setInt(2, i.getIdJogador());
+
+            stmt.setTimestamp(3,
+                    i.getDataInscricao() != null ?
+                            Timestamp.valueOf(i.getDataInscricao()) :
+                            new Timestamp(System.currentTimeMillis())
+            );
+
+            stmt.executeUpdate();
+
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) i.setIdInscricao(keys.getInt(1));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void atualizar(Inscricao i) {
+        String sql = "UPDATE Inscricao SET id_torneio = ?, id_jogador = ?, data_inscricao = ? WHERE id_inscricao = ?";
+
+        try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, i.getIdTorneio());
             stmt.setInt(2, i.getIdJogador());
 
-            if (i.getDataInscricao() != null) {
-                stmt.setTimestamp(3, Timestamp.valueOf(i.getDataInscricao()));
-            } else {
-                stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-            }
+            stmt.setTimestamp(3,
+                    i.getDataInscricao() != null ?
+                            Timestamp.valueOf(i.getDataInscricao()) :
+                            null
+            );
+
+            stmt.setInt(4, i.getIdInscricao());
 
             stmt.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Inscricao buscarPorId(int id) {
+        String sql = "SELECT * FROM Inscricao WHERE id_inscricao = ?";
+
+        try (Connection conn = ConexaoMySQL.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) return criarInscricao(rs);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
@@ -60,9 +107,7 @@ public class InscricaoDAOMySQL implements InscricaoDAO {
             stmt.setInt(1, idTorneio);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                lista.add(criarInscricao(rs));
-            }
+            while (rs.next()) lista.add(criarInscricao(rs));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,9 +128,7 @@ public class InscricaoDAOMySQL implements InscricaoDAO {
             stmt.setInt(1, idJogador);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                lista.add(criarInscricao(rs));
-            }
+            while (rs.next()) lista.add(criarInscricao(rs));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,9 +145,7 @@ public class InscricaoDAOMySQL implements InscricaoDAO {
         i.setIdJogador(rs.getInt("id_jogador"));
 
         Timestamp ts = rs.getTimestamp("data_inscricao");
-        if (ts != null) {
-            i.setDataInscricao(ts.toLocalDateTime());
-        }
+        if (ts != null) i.setDataInscricao(ts.toLocalDateTime());
 
         return i;
     }

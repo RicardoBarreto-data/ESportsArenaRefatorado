@@ -1,6 +1,6 @@
 package esportarena.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Inscricao {
@@ -8,11 +8,11 @@ public class Inscricao {
     private int idInscricao;
     private int idTorneio;
     private int idJogador;
-    private LocalDate dataInscricao;
+    private LocalDateTime dataInscricao;
 
     public Inscricao() {}
 
-    public Inscricao(int idInscricao, int idTorneio, int idJogador, LocalDate dataInscricao) {
+    public Inscricao(int idInscricao, int idTorneio, int idJogador, LocalDateTime dataInscricao) {
         this.idInscricao = idInscricao;
         this.idTorneio = idTorneio;
         this.idJogador = idJogador;
@@ -28,8 +28,8 @@ public class Inscricao {
     public int getIdJogador() { return idJogador; }
     public void setIdJogador(int idJogador) { this.idJogador = idJogador; }
 
-    public LocalDate getDataInscricao() { return dataInscricao; }
-    public void setDataInscricao(LocalDate dataInscricao) { this.dataInscricao = dataInscricao; }
+    public LocalDateTime getDataInscricao() { return dataInscricao; }
+    public void setDataInscricao(LocalDateTime dataInscricao) { this.dataInscricao = dataInscricao; }
 
     @Override
     public boolean equals(Object o) {
