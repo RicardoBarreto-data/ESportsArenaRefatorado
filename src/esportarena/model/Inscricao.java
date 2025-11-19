@@ -44,3 +44,4 @@ public class Inscricao {
         return Objects.hash(idInscricao);
     }
 }
+

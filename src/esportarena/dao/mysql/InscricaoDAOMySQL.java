@@ -26,6 +26,7 @@ public class InscricaoDAOMySQL implements InscricaoDAO {
                             new Timestamp(System.currentTimeMillis())
             );
 
+            
             stmt.executeUpdate();
 
             ResultSet keys = stmt.getGeneratedKeys();
