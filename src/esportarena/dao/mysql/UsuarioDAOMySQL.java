@@ -64,7 +64,7 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
         try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, usuario.getNome());
+            stmt.setString(1, usuario.getNomeUsuario());
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getSenha());
             stmt.setString(4, usuario.getTipo());
@@ -90,7 +90,7 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
         try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, usuario.getNome());
+            stmt.setString(1, usuario.getNomeUsuario());
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getSenha());
             stmt.setString(4, usuario.getTipo());
@@ -142,7 +142,7 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
         Usuario u = new Usuario();
 
         u.setId(rs.getInt("id"));
-        u.setNome(rs.getString("nome_usuario"));
+        u.setNomeUsuario(rs.getString("nome_usuario"));
         u.setEmail(rs.getString("email"));
         u.setSenha(rs.getString("senha"));
         u.setTipo(rs.getString("tipo"));

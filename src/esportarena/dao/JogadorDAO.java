@@ -16,4 +16,6 @@ Jogador buscarPorId(int id);
     List<Jogador> listarPorTime(int idTime);
 
     List<Jogador> listarPorUsuario(int idUsuario);
+
+    List<Jogador> listarTodos();
 }
