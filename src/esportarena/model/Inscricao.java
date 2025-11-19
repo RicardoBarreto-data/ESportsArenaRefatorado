@@ -1,18 +1,18 @@
 package esportarena.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Inscricao {
-    
-private int idInscricao;
+
+    private int idInscricao;
     private int idTorneio;
     private int idJogador;
-    private LocalDateTime dataInscricao;
+    private LocalDate dataInscricao;
 
     public Inscricao() {}
 
-    public Inscricao(int idInscricao, int idTorneio, int idJogador, LocalDateTime dataInscricao) {
+    public Inscricao(int idInscricao, int idTorneio, int idJogador, LocalDate dataInscricao) {
         this.idInscricao = idInscricao;
         this.idTorneio = idTorneio;
         this.idJogador = idJogador;
@@ -28,18 +28,19 @@ private int idInscricao;
     public int getIdJogador() { return idJogador; }
     public void setIdJogador(int idJogador) { this.idJogador = idJogador; }
 
-    public LocalDateTime getDataInscricao() { return dataInscricao; }
-    public void setDataInscricao(LocalDateTime dataInscricao) { this.dataInscricao = dataInscricao; }
+    public LocalDate getDataInscricao() { return dataInscricao; }
+    public void setDataInscricao(LocalDate dataInscricao) { this.dataInscricao = dataInscricao; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Inscricao)) return false;
-        Inscricao inscricao = (Inscricao) o;
-        return idInscricao == inscricao.idInscricao;
+        Inscricao i = (Inscricao) o;
+        return idInscricao == i.idInscricao;
     }
 
     @Override
-    public int hashCode() { return Objects.hash(idInscricao);
-  }
+    public int hashCode() {
+        return Objects.hash(idInscricao);
+    }
 }

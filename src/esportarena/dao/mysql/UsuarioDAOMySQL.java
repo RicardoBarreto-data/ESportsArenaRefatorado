@@ -56,7 +56,10 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
 
     @Override
     public void salvar(Usuario usuario) {
-        String sql = "INSERT INTO Usuario (nome_usuario, email, senha, tipo) VALUES (?, ?, ?, ?)";
+        String sql = """
+            INSERT INTO Usuario (nome_usuario, email, senha, tipo)
+            VALUES (?, ?, ?, ?)
+        """;
 
         try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -68,11 +71,8 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
 
             stmt.executeUpdate();
 
-            // Recuperar ID gerado automaticamente
             ResultSet keys = stmt.getGeneratedKeys();
-            if (keys.next()) {
-                usuario.setId(keys.getInt(1));
-            }
+            if (keys.next()) usuario.setId(keys.getInt(1));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +81,11 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
 
     @Override
     public void atualizar(Usuario usuario) {
-        String sql = "UPDATE Usuario SET nome_usuario = ?, email = ?, senha = ?, tipo = ? WHERE id = ?";
+        String sql = """
+            UPDATE Usuario SET
+                nome_usuario = ?, email = ?, senha = ?, tipo = ?
+            WHERE id = ?
+        """;
 
         try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -116,9 +120,8 @@ public class UsuarioDAOMySQL implements UsuarioDAO {
 
     @Override
     public List<Usuario> listarTodos() {
-        String sql = "SELECT * FROM Usuario";
-
         List<Usuario> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Usuario ORDER BY nome_usuario";
 
         try (Connection conn = ConexaoMySQL.conectar();
              Statement stmt = conn.createStatement();

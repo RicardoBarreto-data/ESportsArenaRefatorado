@@ -4,7 +4,7 @@ import esportarena.model.Time;
 import java.util.List;
 
 public interface TimeDAO {
-   
+
     Time buscarPorId(int id);
 
     void salvar(Time time);
@@ -13,5 +13,8 @@ public interface TimeDAO {
 
     void deletar(int id);
 
-    List<Time> listarTodos(int idTorneio);
+    List<Time> listarTodos();
+
+    List<Time> listarPorTorneio(int idTorneio);
 }
+

@@ -3,15 +3,14 @@ package esportarena.service;
 import esportarena.dao.RankingDAO;
 import esportarena.dao.mysql.RankingDAOMySQL;
 import esportarena.model.Ranking;
+
 import java.util.List;
 
 public class RankingService {
-    
+
     private final RankingDAO rankingDAO;
 
-    public RankingService() {
-        this.rankingDAO = new RankingDAOMySQL();
-    }
+    public RankingService() { this.rankingDAO = new RankingDAOMySQL(); }
 
     public void salvar(Ranking r) { rankingDAO.salvar(r); }
 
@@ -24,5 +23,4 @@ public class RankingService {
     public List<Ranking> listarPorTorneio(int idTorneio) {
         return rankingDAO.listarPorTorneio(idTorneio);
     }
-
 }

@@ -3,14 +3,14 @@ package esportarena.service;
 import esportarena.dao.PartidaDAO;
 import esportarena.dao.mysql.PartidaDAOMySQL;
 import esportarena.model.Partida;
+
 import java.util.List;
 
 public class PartidaService {
+
     private final PartidaDAO partidaDAO;
 
-    public PartidaService() {
-        this.partidaDAO = new PartidaDAOMySQL();
-    }
+    public PartidaService() { this.partidaDAO = new PartidaDAOMySQL(); }
 
     public void salvar(Partida p) { partidaDAO.salvar(p); }
 
@@ -24,3 +24,4 @@ public class PartidaService {
         return partidaDAO.listarPorTorneio(idTorneio);
     }
 }
+

@@ -2,17 +2,15 @@ package esportarena.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Torneio {
     private int idTorneio;
     private String nome;
     private String jogo;
+    private String descricao;
     private LocalDate dataInicio;
     private LocalDate dataTermino;
-    private String descricao;
     private String modalidade;
     private Integer participantesMin;
     private Integer participantesMax;
@@ -21,18 +19,17 @@ public class Torneio {
     private int idOrganizador;
     private LocalDateTime dataEdicao;
 
-    private List<Partida> partidas = new ArrayList<>();
-
     public Torneio() {}
 
-    public Torneio(int idTorneio, String nome, String jogo, LocalDate dataInicio, int idOrganizador) {
+    public Torneio(int idTorneio, String nome, String jogo, LocalDate dataInicio, String regras, int idOrganizador) {
         this.idTorneio = idTorneio;
         this.nome = nome;
         this.jogo = jogo;
         this.dataInicio = dataInicio;
+        this.regras = regras;
         this.idOrganizador = idOrganizador;
     }
-    // getters / setters
+
     public int getIdTorneio() { return idTorneio; }
     public void setIdTorneio(int idTorneio) { this.idTorneio = idTorneio; }
 
@@ -42,14 +39,14 @@ public class Torneio {
     public String getJogo() { return jogo; }
     public void setJogo(String jogo) { this.jogo = jogo; }
 
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
     public LocalDate getDataInicio() { return dataInicio; }
     public void setDataInicio(LocalDate dataInicio) { this.dataInicio = dataInicio; }
 
     public LocalDate getDataTermino() { return dataTermino; }
     public void setDataTermino(LocalDate dataTermino) { this.dataTermino = dataTermino; }
-
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
 
     public String getModalidade() { return modalidade; }
     public void setModalidade(String modalidade) { this.modalidade = modalidade; }
@@ -72,21 +69,16 @@ public class Torneio {
     public LocalDateTime getDataEdicao() { return dataEdicao; }
     public void setDataEdicao(LocalDateTime dataEdicao) { this.dataEdicao = dataEdicao; }
 
-    public List<Partida> getPartidas() { return partidas; }
-    public void adicionarPartida(Partida p) { this.partidas.add(p); }
-
-    @Override
-    public String toString() {
-        return "Torneio{" + "idTorneio=" + idTorneio + ", nome='" + nome + '\'' + ", jogo='" + jogo + '\'' + ", dataInicio=" + dataInicio + '}';
-    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Torneio)) return false;
-        Torneio torneio = (Torneio) o;
-        return idTorneio == torneio.idTorneio;
+        Torneio t = (Torneio) o;
+        return idTorneio == t.idTorneio;
     }
+
     @Override
-    public int hashCode() { return Objects.hash(idTorneio); 
-  }
+    public int hashCode() {
+        return Objects.hash(idTorneio);
+    }
 }

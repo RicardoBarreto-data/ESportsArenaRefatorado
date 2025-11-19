@@ -1,16 +1,15 @@
 package esportarena.dao.mysql;
 
 import esportarena.dao.TorneioDAO;
-import esportarena.model.Torneio;
 import esportarena.database.ConexaoMySQL;
+import esportarena.model.Torneio;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TorneioDAOMySQL implements TorneioDAO{
-    
+public class TorneioDAOMySQL implements TorneioDAO {
+
     @Override
     public Torneio buscarPorId(int id) {
         String sql = "SELECT * FROM Torneio WHERE id_torneio = ?";
@@ -66,15 +65,15 @@ public class TorneioDAOMySQL implements TorneioDAO{
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, torneio.getNome());
-            stmt.setString(2, torneio.getDescricao());
+            stmt.setString(2, torneio.getDescricao() != null ? torneio.getDescricao() : "");
             stmt.setString(3, torneio.getJogo());
             stmt.setDate(4, torneio.getDataInicio() != null ? Date.valueOf(torneio.getDataInicio()) : null);
             stmt.setDate(5, torneio.getDataTermino() != null ? Date.valueOf(torneio.getDataTermino()) : null);
             stmt.setString(6, torneio.getModalidade());
-            stmt.setObject(7, torneio.getParticipantesMin() != null ? torneio.getParticipantesMin() : null);
-            stmt.setObject(8, torneio.getParticipantesMax() != null ? torneio.getParticipantesMax() : null);
+            stmt.setObject(7, torneio.getParticipantesMin());
+            stmt.setObject(8, torneio.getParticipantesMax());
             stmt.setString(9, torneio.getPlataforma());
-            stmt.setString(10, torneio.getRegras());
+            stmt.setString(10, torneio.getRegras() != null ? torneio.getRegras() : "");
             stmt.setInt(11, torneio.getIdOrganizador());
 
             stmt.executeUpdate();
@@ -101,15 +100,15 @@ public class TorneioDAOMySQL implements TorneioDAO{
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, torneio.getNome());
-            stmt.setString(2, torneio.getDescricao());
+            stmt.setString(2, torneio.getDescricao() != null ? torneio.getDescricao() : "");
             stmt.setString(3, torneio.getJogo());
             stmt.setDate(4, torneio.getDataInicio() != null ? Date.valueOf(torneio.getDataInicio()) : null);
             stmt.setDate(5, torneio.getDataTermino() != null ? Date.valueOf(torneio.getDataTermino()) : null);
             stmt.setString(6, torneio.getModalidade());
-            stmt.setObject(7, torneio.getParticipantesMin() != null ? torneio.getParticipantesMin() : null);
-            stmt.setObject(8, torneio.getParticipantesMax() != null ? torneio.getParticipantesMax() : null);
+            stmt.setObject(7, torneio.getParticipantesMin());
+            stmt.setObject(8, torneio.getParticipantesMax());
             stmt.setString(9, torneio.getPlataforma());
-            stmt.setString(10, torneio.getRegras());
+            stmt.setString(10, torneio.getRegras() != null ? torneio.getRegras() : "");
             stmt.setInt(11, torneio.getIdTorneio());
 
             stmt.executeUpdate();
@@ -136,13 +135,17 @@ public class TorneioDAOMySQL implements TorneioDAO{
 
     private Torneio criarTorneio(ResultSet rs) throws SQLException {
         Torneio t = new Torneio();
+
         t.setIdTorneio(rs.getInt("id_torneio"));
         t.setNome(rs.getString("nome"));
         t.setJogo(rs.getString("jogo"));
+
         Date dInicio = rs.getDate("data_inicio");
         if (dInicio != null) t.setDataInicio(dInicio.toLocalDate());
+
         Date dTermino = rs.getDate("data_termino");
         if (dTermino != null) t.setDataTermino(dTermino.toLocalDate());
+
         t.setDescricao(rs.getString("descricao"));
         t.setModalidade(rs.getString("modalidade"));
         t.setParticipantesMin(rs.getObject("participantes_min") != null ? rs.getInt("participantes_min") : null);
@@ -150,13 +153,38 @@ public class TorneioDAOMySQL implements TorneioDAO{
         t.setPlataforma(rs.getString("plataforma"));
         t.setRegras(rs.getString("regras"));
         t.setIdOrganizador(rs.getInt("id_organizador"));
+
         Timestamp tsEd = rs.getTimestamp("data_edicao");
         if (tsEd != null) t.setDataEdicao(tsEd.toLocalDateTime());
+
         return t;
     }
 
     @Override
     public List<Torneio> listarPorOrganizador(int idOrganizador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Torneio> lista = new ArrayList<>();
+
+        String sql = """
+            SELECT *
+            FROM Torneio
+            WHERE id_organizador = ?
+            ORDER BY data_inicio DESC
+        """;
+
+        try (Connection conn = ConexaoMySQL.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idOrganizador);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lista.add(criarTorneio(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
     }
 }

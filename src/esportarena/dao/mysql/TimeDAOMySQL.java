@@ -1,8 +1,8 @@
 package esportarena.dao.mysql;
 
 import esportarena.dao.TimeDAO;
-import esportarena.model.Time;
 import esportarena.database.ConexaoMySQL;
+import esportarena.model.Time;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -32,13 +32,15 @@ public class TimeDAOMySQL implements TimeDAO {
     }
 
     @Override
-    public List<Time> listarTodos() {
+    public List<Time> listarTodos(int idTorneio) {
         List<Time> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Time ORDER BY nome_time";
+        String sql = "SELECT * FROM Time WHERE id_torneio = ? ORDER BY nome_time";
 
         try (Connection conn = ConexaoMySQL.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idTorneio);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 lista.add(criarTime(rs));
@@ -106,19 +108,36 @@ public class TimeDAOMySQL implements TimeDAO {
         }
     }
 
-    private Time criarTime(ResultSet rs) throws SQLException {
-        Time t = new Time(
-                rs.getInt("id_time"),
-                rs.getString("nome_time"),
-                rs.getInt("id_torneio")
-        );
-
-        t.setHistoricoCompeticoes(rs.getString("historico_competicoes"));
-        return t;
-    }
-
     @Override
     public List<Time> listarPorTorneio(int idTorneio) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Time> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Time WHERE id_torneio = ? ORDER BY nome_time";
+
+        try (Connection conn = ConexaoMySQL.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idTorneio);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lista.add(criarTime(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    private Time criarTime(ResultSet rs) throws SQLException {
+        Time t = new Time();
+
+        t.setIdTime(rs.getInt("id_time"));
+        t.setNomeTime(rs.getString("nome_time"));
+        t.setIdTorneio(rs.getInt("id_torneio"));
+        t.setHistoricoCompeticoes(rs.getString("historico_competicoes"));
+
+        return t;
     }
 }

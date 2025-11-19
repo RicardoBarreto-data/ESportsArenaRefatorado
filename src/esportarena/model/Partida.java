@@ -7,7 +7,7 @@ public class Partida {
     private int idPartida;
     private LocalDateTime data;
     private String resultado;
-    private String status; // agendada, em andamento, concluida
+    private String status;
     private int idTorneio;
     private int idTime1;
     private int idTime2;
@@ -45,19 +45,13 @@ public class Partida {
     public void setIdTime2(int idTime2) { this.idTime2 = idTime2; }
 
     @Override
-    public String toString() {
-        return "Partida{" + "idPartida=" + idPartida + ", data=" + data + ", status='" + status + '\'' + '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Partida)) return false;
-        Partida partida = (Partida) o;
-        return idPartida == partida.idPartida;
+        Partida p = (Partida) o;
+        return idPartida == p.idPartida;
     }
 
     @Override
-    public int hashCode() { return Objects.hash(idPartida);
-  }
+    public int hashCode() { return Objects.hash(idPartida); }
 }

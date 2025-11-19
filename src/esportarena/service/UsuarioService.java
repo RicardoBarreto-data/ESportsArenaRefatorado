@@ -4,9 +4,11 @@ package esportarena.service;
 import esportarena.dao.UsuarioDAO;
 import esportarena.dao.mysql.UsuarioDAOMySQL;
 import esportarena.model.Usuario;
+
 import java.util.List;
 
 public class UsuarioService {
+
     private final UsuarioDAO usuarioDAO;
 
     public UsuarioService() {
@@ -23,7 +25,8 @@ public class UsuarioService {
 
     public List<Usuario> listarTodos() { return usuarioDAO.listarTodos(); }
 
-    public Usuario login(String nome, String tipo) {
-        return usuarioDAO.buscarPorNomeETipo(nome, tipo);
+    public Usuario login(String email, String senha) {
+        return usuarioDAO.buscarPorEmailSenha(email, senha);
     }
 }
+

@@ -3,12 +3,11 @@ package esportarena.model;
 import java.util.Objects;
 
 public class Ranking {
-    
-private int idRanking;
+    private int idRanking;
     private int classificacao;
     private int pontuacao;
     private int idTorneio;
-    private int idTime; // ou idJogador dependendo do tipo
+    private int idTime;
 
     public Ranking() {}
 
@@ -36,17 +35,5 @@ private int idRanking;
     public void setIdTime(int idTime) { this.idTime = idTime; }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Ranking)) return false;
-        Ranking ranking = (Ranking) o;
-        return idRanking == ranking.idRanking;
-    }
-
-    @Override
     public int hashCode() { return Objects.hash(idRanking); }
-
-    @Override
-    public String toString() { return "Ranking{" + "idRanking=" + idRanking + ", pontuacao=" + pontuacao + '}';
-  }
 }

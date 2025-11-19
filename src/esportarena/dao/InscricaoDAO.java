@@ -4,7 +4,9 @@ import esportarena.model.Inscricao;
 import java.util.List;
 
 public interface InscricaoDAO {
-  
+
+    Inscricao buscarPorId(int id);
+
     void salvar(Inscricao inscricao);
 
     void deletar(int id);
@@ -13,3 +15,4 @@ public interface InscricaoDAO {
 
     List<Inscricao> listarPorJogador(int idJogador);
 }
+

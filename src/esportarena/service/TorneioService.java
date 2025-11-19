@@ -3,14 +3,14 @@ package esportarena.service;
 import esportarena.dao.TorneioDAO;
 import esportarena.dao.mysql.TorneioDAOMySQL;
 import esportarena.model.Torneio;
+
 import java.util.List;
 
 public class TorneioService {
+
     private final TorneioDAO torneioDAO;
 
-    public TorneioService() {
-        this.torneioDAO = new TorneioDAOMySQL();
-    }
+    public TorneioService() { this.torneioDAO = new TorneioDAOMySQL(); }
 
     public void salvar(Torneio t) { torneioDAO.salvar(t); }
 
@@ -20,7 +20,10 @@ public class TorneioService {
 
     public Torneio buscarPorId(int id) { return torneioDAO.buscarPorId(id); }
 
-    public List<Torneio> listarTodos() { return torneioDAO.listarTodos(); 
+    public List<Torneio> listarTodos() { return torneioDAO.listarTodos(); }
+
+    public List<Torneio> listarPorOrganizador(int idOrganizador) {
+        return torneioDAO.listarPorOrganizador(idOrganizador);
     }
 }
 

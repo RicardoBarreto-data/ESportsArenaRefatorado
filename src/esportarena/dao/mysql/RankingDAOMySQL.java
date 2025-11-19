@@ -68,7 +68,7 @@ public class RankingDAOMySQL implements RankingDAO {
         """;
 
         try (Connection conn = ConexaoMySQL.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, r.getPontuacao());
             stmt.setInt(2, r.getClassificacao());
@@ -76,6 +76,11 @@ public class RankingDAOMySQL implements RankingDAO {
             stmt.setInt(4, r.getIdTime());
 
             stmt.executeUpdate();
+
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) {
+                r.setIdRanking(keys.getInt(1));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,3 +141,4 @@ public class RankingDAOMySQL implements RankingDAO {
         return r;
     }
 }
+
