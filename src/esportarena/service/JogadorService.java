@@ -1,13 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package esportarena.service;
 
-/**
- *
- * @author Micro
- */
+import esportarena.dao.JogadorDAO;
+import esportarena.dao.mysql.JogadorDAOMySQL;
+import esportarena.model.Jogador;
+import java.util.List;
+
 public class JogadorService {
     
+private final JogadorDAO jogadorDAO;
+
+    public JogadorService() {
+        this.jogadorDAO = new JogadorDAOMySQL();
+    }
+
+    public void salvar(Jogador j) { jogadorDAO.salvar(j); }
+
+    public void atualizar(Jogador j) { jogadorDAO.atualizar(j); }
+
+    public void deletar(int id) { jogadorDAO.deletar(id); }
+
+    public Jogador buscarPorId(int id) { return jogadorDAO.buscarPorId(id); }
+
+    public List<Jogador> listarTodos() { return jogadorDAO.listarTodos(); }
 }

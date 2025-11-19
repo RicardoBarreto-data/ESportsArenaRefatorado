@@ -13,5 +13,5 @@ public interface TimeDAO {
 
     void deletar(int id);
 
-    List<Time> listarPorTorneio(int idTorneio);
+    List<Time> listarTodos(int idTorneio);
 }

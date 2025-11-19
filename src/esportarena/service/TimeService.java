@@ -1,13 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package esportarena.service;
 
-/**
- *
- * @author Micro
- */
+import esportarena.dao.TimeDAO;
+import esportarena.dao.mysql.TimeDAOMySQL;
+import esportarena.model.Time;
+import java.util.List;
+
 public class TimeService {
-    
+    private final TimeDAO timeDAO;
+
+    public TimeService() {
+        this.timeDAO = new TimeDAOMySQL();
+    }
+
+    public void salvar(Time t) { timeDAO.salvar(t); }
+
+    public void atualizar(Time t) { timeDAO.atualizar(t); }
+
+    public void deletar(int id) { timeDAO.deletar(id); }
+
+    public Time buscarPorId(int id) { return timeDAO.buscarPorId(id); }
+
+    public List<Time> listarTodos() { return timeDAO.listarTodos(); }
 }

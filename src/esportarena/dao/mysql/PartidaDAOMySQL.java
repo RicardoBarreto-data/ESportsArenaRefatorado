@@ -2,10 +2,11 @@
 package esportarena.dao.mysql;
 
 import esportarena.dao.PartidaDAO;
-import esportarena.database.ConexaoMySQL;
 import esportarena.model.Partida;
+import esportarena.database.ConexaoMySQL;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,65 +23,66 @@ public class PartidaDAOMySQL implements PartidaDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return criarPartida(rs);
+                Partida p = new Partida();
+                p.setIdPartida(rs.getInt("id_partida"));
+                Timestamp ts = rs.getTimestamp("data");
+                if (ts != null) p.setData(ts.toLocalDateTime());
+                p.setResultado(rs.getString("resultado"));
+                p.setStatus(rs.getString("status"));
+                p.setIdTorneio(rs.getInt("id_torneio"));
+                p.setIdTime1(rs.getInt("id_time1"));
+                p.setIdTime2(rs.getInt("id_time2"));
+                return p;
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
     @Override
     public void salvar(Partida partida) {
-        String sql = """
-            INSERT INTO Partida (id_torneio, id_time1, id_time2, data, status, resultado)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """;
+        String sql = "INSERT INTO Partida (data, resultado, status, id_torneio, id_time1, id_time2) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConexaoMySQL.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, partida.getIdTorneio());
-            stmt.setInt(2, partida.getIdTime1());
-            stmt.setInt(3, partida.getIdTime2());
-            stmt.setTimestamp(4, Timestamp.valueOf(partida.getData()));
-            stmt.setString(5, partida.getStatus());
-            stmt.setString(6, partida.getResultado());
+            stmt.setTimestamp(1, partida.getData() != null ? Timestamp.valueOf(partida.getData()) : new Timestamp(System.currentTimeMillis()));
+            stmt.setString(2, partida.getResultado() != null ? partida.getResultado() : "");
+            stmt.setString(3, partida.getStatus() != null ? partida.getStatus() : "agendada");
+            stmt.setInt(4, partida.getIdTorneio());
+            stmt.setInt(5, partida.getIdTime1());
+            stmt.setInt(6, partida.getIdTime2());
 
             stmt.executeUpdate();
 
-        } catch (SQLException e) {
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) partida.setIdPartida(keys.getInt(1));
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void atualizar(Partida partida) {
-        String sql = """
-            UPDATE Partida
-            SET id_time1 = ?, 
-                id_time2 = ?, 
-                data = ?, 
-                status = ?, 
-                resultado = ?
-            WHERE id_partida = ?
-        """;
+        String sql = "UPDATE Partida SET data = ?, resultado = ?, status = ?, id_torneio = ?, id_time1 = ?, id_time2 = ? WHERE id_partida = ?";
 
         try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, partida.getIdTime1());
-            stmt.setInt(2, partida.getIdTime2());
-            stmt.setTimestamp(3, Timestamp.valueOf(partida.getData()));
-            stmt.setString(4, partida.getStatus());
-            stmt.setString(5, partida.getResultado());
-            stmt.setInt(6, partida.getIdPartida());
+            stmt.setTimestamp(1, partida.getData() != null ? Timestamp.valueOf(partida.getData()) : null);
+            stmt.setString(2, partida.getResultado());
+            stmt.setString(3, partida.getStatus());
+            stmt.setInt(4, partida.getIdTorneio());
+            stmt.setInt(5, partida.getIdTime1());
+            stmt.setInt(6, partida.getIdTime2());
+            stmt.setInt(7, partida.getIdPartida());
 
             stmt.executeUpdate();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -95,20 +97,16 @@ public class PartidaDAOMySQL implements PartidaDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public List<Partida> listarPorTorneio(int idTorneio) {
-        List<Partida> lista = new ArrayList<>();
+        List<Partida> partidas = new ArrayList<>();
 
-        String sql = """
-            SELECT * FROM Partida
-            WHERE id_torneio = ?
-            ORDER BY data
-        """;
+        String sql = "SELECT * FROM Partida WHERE id_torneio = ? ORDER BY data";
 
         try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -117,32 +115,23 @@ public class PartidaDAOMySQL implements PartidaDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                lista.add(criarPartida(rs));
+                Partida p = new Partida();
+                p.setIdPartida(rs.getInt("id_partida"));
+                Timestamp ts = rs.getTimestamp("data");
+                if (ts != null) p.setData(ts.toLocalDateTime());
+                p.setResultado(rs.getString("resultado"));
+                p.setStatus(rs.getString("status"));
+                p.setIdTorneio(rs.getInt("id_torneio"));
+                p.setIdTime1(rs.getInt("id_time1"));
+                p.setIdTime2(rs.getInt("id_time2"));
+
+                partidas.add(p);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return lista;
-    }
-
-    private Partida criarPartida(ResultSet rs) throws SQLException {
-        Partida p = new Partida();
-
-        p.setIdPartida(rs.getInt("id_partida"));
-        p.setIdTorneio(rs.getInt("id_torneio"));
-        p.setIdTime1(rs.getInt("id_time1"));
-        p.setIdTime2(rs.getInt("id_time2"));
-        p.setStatus(rs.getString("status"));
-        p.setResultado(rs.getString("resultado"));
-
-        Timestamp ts = rs.getTimestamp("data");
-        if (ts != null) {
-            p.setData(ts.toLocalDateTime());
-        }
-
-        return p;
+        return partidas;
     }
 }
-

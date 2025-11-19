@@ -53,15 +53,19 @@ public class TimeDAOMySQL implements TimeDAO {
 
     @Override
     public void salvar(Time time) {
-        String sql = "INSERT INTO Time (nome_time, id_torneio) VALUES (?, ?)";
+        String sql = "INSERT INTO Time (nome_time, historico_competicoes, id_torneio) VALUES (?, ?, ?)";
 
         try (Connection conn = ConexaoMySQL.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, time.getNome());
-            stmt.setInt(2, time.getIdTorneio());
+            stmt.setString(1, time.getNomeTime());
+            stmt.setString(2, time.getHistoricoCompeticoes() != null ? time.getHistoricoCompeticoes() : "");
+            stmt.setInt(3, time.getIdTorneio());
 
             stmt.executeUpdate();
+
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) time.setIdTime(keys.getInt(1));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,14 +74,15 @@ public class TimeDAOMySQL implements TimeDAO {
 
     @Override
     public void atualizar(Time time) {
-        String sql = "UPDATE Time SET nome_time = ?, id_torneio = ? WHERE id_time = ?";
+        String sql = "UPDATE Time SET nome_time = ?, historico_competicoes = ?, id_torneio = ? WHERE id_time = ?";
 
         try (Connection conn = ConexaoMySQL.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, time.getNome());
-            stmt.setInt(2, time.getIdTorneio());
-            stmt.setInt(3, time.getId());
+            stmt.setString(1, time.getNomeTime());
+            stmt.setString(2, time.getHistoricoCompeticoes() != null ? time.getHistoricoCompeticoes() : "");
+            stmt.setInt(3, time.getIdTorneio());
+            stmt.setInt(4, time.getIdTime());
 
             stmt.executeUpdate();
 
@@ -104,10 +109,16 @@ public class TimeDAOMySQL implements TimeDAO {
     private Time criarTime(ResultSet rs) throws SQLException {
         Time t = new Time(
                 rs.getInt("id_time"),
-                rs.getString("nome_time")
+                rs.getString("nome_time"),
+                rs.getInt("id_torneio")
         );
 
-        t.setIdTorneio(rs.getInt("id_torneio"));
+        t.setHistoricoCompeticoes(rs.getString("historico_competicoes"));
         return t;
+    }
+
+    @Override
+    public List<Time> listarPorTorneio(int idTorneio) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
