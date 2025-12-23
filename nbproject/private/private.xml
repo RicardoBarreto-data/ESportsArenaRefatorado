@@ -27,10 +27,12 @@
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/service/PartidaService.java</file>
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/dao/mysql/PartidaDAOMySQL.java</file>
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/dao/mysql/TorneioDAOMySQL.java</file>
+            <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/resoucers/db.properties</file>
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/model/Usuario.java</file>
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/dao/mysql/RankingDAOMySQL.java</file>
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportsarenarefatorado/ESportsArenaRefatorado.java</file>
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/dao/mysql/JogadorDAOMySQL.java</file>
+            <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/database/ConexaoMySQL.java</file>
             <file>file:/C:/Users/Micro/Documents/NetBeansProjects/eSportsArenaRefatorado/src/esportarena/dao/mysql/UsuarioDAOMySQL.java</file>
         </group>
     </open-files>
